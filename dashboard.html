@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es" data-auth="true">
+<head>
+  <meta charset="UTF-8">
+  <title>TaskFlow | Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- CSS propio -->
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2>TaskFlow</h2>
+    </div>
+
+    <nav class="sidebar-menu">
+      <a href="#" class="active" data-page="dashboard">Dashboard</a>
+      <a href="#" data-page="projects">Projects</a>
+      <a href="#" data-page="files">Files</a>
+      <a href="settings.html">Settings</a>
+    </nav>
+
+    <div class="sidebar-user">
+      <img id="userAvatar" src="assets/avatars/default.png" alt="User avatar">
+      <span id="userName">Usuario</span>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN ================= -->
+  <main class="main-content">
+
+    <!-- ===== DASHBOARD PAGE ===== -->
+    <section id="dashboard" class="page active-page">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <h4>Hi, <span id="greetingName">User</span> </h4>
+        <div class="topbar-actions">
+          <button id="toggleTheme" class="btn btn-sm btn-outline-secondary">Night</button>
+          <button id="logoutBtn" class="btn btn-sm btn-danger">Logout</button>
+        </div>
+      </header>
+
+      <!-- Stats -->
+      <section class="stats">
+        <div class="stat-card">
+          <h6>Total Tasks</h6>
+          <span id="totalTasks">0</span>
+        </div>
+        <div class="stat-card">
+          <h6>Pending</h6>
+          <span id="pendingTasks">0</span>
+        </div>
+        <div class="stat-card">
+          <h6>Completed</h6>
+          <span id="completedTasks">0</span>
+        </div>
+      </section>
+
+      <!-- Task Form -->
+      <section class="task-form-section">
+        <h5>Create Task</h5>
+        <form id="taskForm" class="row g-3">
+          <div class="col-md-4">
+            <input type="text" id="taskTitle" class="form-control" placeholder="Task title">
+          </div>
+          <div class="col-md-4">
+            <input type="text" id="taskDescription" class="form-control" placeholder="Description">
+          </div>
+          <div class="col-md-2">
+            <select id="taskPriority" class="form-select">
+              <option value="">Priority</option>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Add</button>
+          </div>
+        </form>
+        <p id="formMessage" class="form-message"></p>
+      </section>
+
+      <!-- Filters -->
+      <section class="filters">
+        <select id="statusFilter" class="form-select w-auto">
+          <option value="all">All</option>
+          <option value="pending">Pending</option>
+          <option value="in-progress">In Progress</option>
+          <option value="completed">Completed</option>
+        </select>
+
+        <select id="priorityFilter" class="form-select w-auto">
+          <option value="all">All priorities</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+      </section>
+
+      <!-- Task List -->
+      <section class="task-list">
+        <h5>Your Tasks</h5>
+        <div id="tasksContainer" class="tasks-container">
+          <!-- Tasks rendered by JS -->
+        </div>
+      </section>
+
+    </section>
+
+    <!-- ===== PROJECTS PAGE ===== -->
+    <section id="projects" class="page">
+
+      <!-- New Project Form -->
+      <div class="project-form-section mb-4">
+        <h5>Create Project</h5>
+        <form id="projectForm" class="row g-3">
+          <div class="col-md-4">
+            <input type="text" id="projectName" class="form-control" placeholder="Project name" required>
+          </div>
+          <div class="col-md-4">
+            <input type="text" id="projectDesc" class="form-control" placeholder="Description" required>
+          </div>
+          <div class="col-md-2">
+            <input type="number" id="projectMembers" class="form-control" placeholder="Members" min="1" required>
+          </div>
+          <div class="col-md-2">
+            <input type="number" id="projectProgress" class="form-control" placeholder="Progress %" min="0" max="100" required>
+          </div>
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary">Add Project</button>
+          </div>
+        </form>
+        <p id="projectMessage" class="form-message"></p>
+      </div>
+
+      <div id="projectsContainer" class="projects-grid"></div>
+
+    </section>
+
+    <div id="messageBox" class="message"></div>
+
+  </main>
+
+  <!-- ================= AUTH GUARD ================= -->
+  <script>
+    const user = JSON.parse(localStorage.getItem("taskflowUser"));
+    if (!user) {
+      window.location.href = "login.html";
+    } else {
+      document.getElementById("userName").textContent = user.name;
+      document.getElementById("greetingName").textContent = user.name;
+      document.getElementById("userAvatar").src = user.avatar || "assets/avatars/default.png";
+    }
+  </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const toggleThemeBtn = document.getElementById("toggleTheme");
+  const body = document.body;
+
+  // Función para actualizar texto e estilo del botón
+  function updateToggleButton() {
+    const isLight = body.classList.contains("light-mode");
+    toggleThemeBtn.textContent = isLight ? "🌙 Night" : "☀️ Day";
+
+    toggleThemeBtn.classList.remove("btn-outline-secondary", "btn-outline-light");
+    toggleThemeBtn.classList.add(isLight ? "btn-outline-secondary" : "btn-outline-light");
+  }
+
+  // Cargar tema guardado
+  const savedTheme = localStorage.getItem("taskflowTheme");
+  if (savedTheme === "light") {
+    body.classList.add("light-mode");
+  } else {
+    body.classList.remove("light-mode");
+  }
+  updateToggleButton();
+
+  // Cambiar tema al hacer clic
+  toggleThemeBtn.addEventListener("click", () => {
+    body.classList.toggle("light-mode");
+    const isLight = body.classList.contains("light-mode");
+    localStorage.setItem("taskflowTheme", isLight ? "light" : "dark");
+    updateToggleButton();
+  });
+});
+</script>
+
+
+  <!-- ================= SCRIPTS ================= -->
+  <script src="js/state.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="js/filters.js" defer></script>
+  <script src="js/events.js" defer></script>
+  <script src="js/dashboard.js" defer></script>
+  <script src="js/navigation.js" defer></script>
+  <script src="js/profile.js" defer></script>
+  <script src="js/user.js" defer></script>
+  <script src="js/projects.js" defer></script>
+
+</body>
+</html>

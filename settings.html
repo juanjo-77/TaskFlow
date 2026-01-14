@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>TaskFlow | Settings</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap -->
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" 
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+<!-- ================= AUTH GUARD ================= -->
+<script>
+  // Verifica si el usuario está logueado
+  const user = JSON.parse(localStorage.getItem("taskflowUser"));
+  if (!user) {
+    window.location.href = "login.html";
+  }
+</script>
+
+<div class="container py-5" style="max-width:500px">
+
+  <h3 class="mb-4 text-center">Profile Settings</h3>
+
+  <!-- Avatar Preview -->
+  <div class="text-center mb-4">
+    <img 
+      id="previewAvatar"
+      src="assets/avatars/default.png"
+      alt="Avatar"
+      class="rounded-circle border"
+      style="width:120px;height:120px;object-fit:cover"
+    >
+  </div>
+
+  <!-- Formulario de perfil -->
+  <form id="profileForm">
+
+    <div class="mb-3">
+      <label class="form-label">Username</label>
+      <input 
+        type="text"
+        id="profileName"
+        class="form-control"
+        required
+      >
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Profile picture</label>
+      <input 
+        type="file"
+        id="profileAvatar"
+        class="form-control"
+        accept="image/*"
+      >
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">
+      Save changes
+    </button>
+
+    <p id="profileMessage" class="mt-3 text-center"></p>
+  </form>
+
+  <div class="text-center mt-4">
+    <a href="dashboard.html">← Back to dashboard</a>
+  </div>
+
+</div>
+
+<script>
+  // Elementos
+  const profileForm = document.getElementById("profileForm");
+  const profileName = document.getElementById("profileName");
+  const profileAvatar = document.getElementById("profileAvatar");
+  const previewAvatar = document.getElementById("previewAvatar");
+  const profileMessage = document.getElementById("profileMessage");
+
+  // Cargar datos del usuario al iniciar
+  if (user) {
+    profileName.value = user.name || "";
+    if (user.avatar) previewAvatar.src = user.avatar;
+  }
+
+  // Preview de avatar al seleccionar imagen
+  profileAvatar.addEventListener("change", () => {
+    const file = profileAvatar.files[0];
+    if (file) {
+      // Validar tamaño máximo 2MB
+      if (file.size > 2 * 1024 * 1024) {
+        profileMessage.textContent = "El archivo es demasiado grande (máx 2MB).";
+        profileMessage.className = "text-danger mt-3 text-center";
+        profileAvatar.value = "";
+        return;
+      }
+      previewAvatar.src = URL.createObjectURL(file);
+      profileMessage.textContent = "";
+    }
+  });
+
+  // Guardar cambios
+  profileForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    if (!profileName.value.trim()) {
+      profileMessage.textContent = "El nombre de usuario no puede estar vacío.";
+      profileMessage.className = "text-danger mt-3 text-center";
+      return;
+    }
+
+    const updatedUser = { ...user, name: profileName.value.trim() };
+
+    const avatarFile = profileAvatar.files[0];
+    if (avatarFile) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        updatedUser.avatar = reader.result;
+        localStorage.setItem("taskflowUser", JSON.stringify(updatedUser));
+        profileMessage.textContent = "¡Perfil actualizado con éxito!";
+        profileMessage.className = "text-success mt-3 text-center";
+      };
+      reader.readAsDataURL(avatarFile);
+    } else {
+      localStorage.setItem("taskflowUser", JSON.stringify(updatedUser));
+      profileMessage.textContent = "¡Perfil actualizado con éxito!";
+      profileMessage.className = "text-success mt-3 text-center";
+    }
+  });
+</script>
+
+</body>
+</html>

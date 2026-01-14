@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskFlow</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/landing.css">
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="assets/img/house-door-fill.svg" type="image/x-icon">
+
+  <!-- Auth guard: si el usuario ya está logueado, va al dashboard -->
+  <script>
+    const user = JSON.parse(localStorage.getItem("taskflowUser"));
+    if (user) {
+      window.location.replace("dashboard.html");
+    }
+  </script>
+</head>
+
+<body>
+
+  <!-- ================= HEADER / NAVBAR ================= -->
+  <header class="header-container d-flex align-items-center justify-content-between px-4 py-3 bg-light shadow-sm">
+    <div class="d-flex align-items-center gap-2">
+      <a href="index.html">
+        <img src="assets/img/logo-TaskFlow.png" alt="TaskFlow" width="36">
+      </a>
+      <span class="navbar-title fw-bold">TaskFlow</span>
+    </div>
+
+    <!-- NAV -->
+    <nav class="d-none d-md-flex gap-3">
+      <a href="#prices" class="nav-link">Precios</a>
+      <a href="download.html" class="nav-link">Descargar</a>
+      <a href="#integrations" class="nav-link">Integraciones</a>
+    </nav>
+
+    <!-- CTA -->
+    <a href="register.html" class="btn btn-primary">Únete gratis</a>
+
+    <button class="nav-toggle d-md-none btn btn-outline-secondary">☰</button>
+  </header>
+
+  <!-- ================= MAIN ================= -->
+  <main>
+
+    <!-- HERO -->
+    <section class="hero-section container-lg d-flex flex-wrap align-items-center justify-content-between py-5">
+      <div class="hero-text col-lg-6">
+        <h1 class="hero-title">Organiza tu trabajo y aumenta tu productividad con TaskFlow</h1>
+        <p class="hero-subtitle">La herramienta definitiva para la gestión de tareas y proyectos</p>
+        <div class="hero-buttons mt-3">
+          <button class="btn btn-outline-secondary me-2">Saber más</button>
+          <a href="register.html" class="btn btn-primary">Comenzar Gratis</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="feature-container container py-5">
+      <h2 class="section-title text-center mb-4">Características</h2>
+      <div class="row g-4 text-center">
+        <div class="col-md-4 feature">
+          <img src="assets/img/1582819.png" alt="Gestión de Tareas" class="mb-3">
+          <h3>Gestión de Tareas</h3>
+          <p>Organiza y prioriza tareas fácilmente.</p>
+        </div>
+        <div class="col-md-4 feature">
+          <img src="assets/img/1006660.png" alt="Trabajo en Equipo" class="mb-3">
+          <h3>Trabajo en Equipo</h3>
+          <p>Colabora en tiempo real con tu equipo.</p>
+        </div>
+        <div class="col-md-4 feature">
+          <img src="assets/img/5496341.png" alt="Seguimiento" class="mb-3">
+          <h3>Seguimiento</h3>
+          <p>Visualiza el progreso de tus proyectos.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICES -->
+    <section class="price-container container py-5" id="prices">
+      <h2 class="section-title text-center mb-4">Planes</h2>
+      <div class="row g-4 justify-content-center">
+        <div class="col-md-3 card card-price text-center p-4">
+          <h3>Básico</h3>
+          <p>$19.99 / mes</p>
+        </div>
+        <div class="col-md-3 card card-price text-center p-4">
+          <h3>Pro</h3>
+          <p>$49.99 / mes</p>
+        </div>
+        <div class="col-md-3 card card-price text-center p-4">
+          <h3>Empresa</h3>
+          <p>$99.99 / mes</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-dark text-light py-5">
+    <div class="container d-flex flex-wrap justify-content-between gap-4">
+      <div>
+        <h4>TaskFlow</h4>
+        <p>Organiza tu trabajo de forma inteligente</p>
+      </div>
+      <div>
+        <h4>Explora</h4>
+        <a href="#prices" class="d-block text-light">Precios</a>
+        <a href="download.html" class="d-block text-light">Descargar</a>
+        <a href="#integrations" class="d-block text-light">Integraciones</a>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <input type="email" class="form-control mt-2" placeholder="Tu correo">
+      </div>
+      <div>
+        <h4>Social</h4>
+        <a href="#" class="d-block text-light">LinkedIn</a>
+        <a href="#" class="d-block text-light">Instagram</a>
+      </div>
+    </div>
+    <div class="text-center mt-4">© 2024 TaskFlow — Todos los derechos reservados</div>
+  </footer>
+
+  <!-- ================= JS ================= -->
+  <script src="js/ui.js"></script>
+
+</body>
+</html>
